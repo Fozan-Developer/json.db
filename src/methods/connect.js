@@ -3,18 +3,46 @@ const fs = require('fs');
 const path = require('path');
 
 var models_dir = require('../functions/models_dir.js')();
+var saveDB = require('../functions/saveDB.js');
+
+async function addModel(name) {
+	let baseModels = require('../models.json');
+
+	baseModels[name] = {
+		name: name,
+		file: `${name}.json`
+	};
+
+	const pathFile = await path.join(__dirname, `../models.json`);
+	require('fs').writeFileSync(pathFile, JSON.stringify(baseModels, null, '\t'));
+};
+
+async function checkBaseModels(argument) {
+	let baseModels = require('../models.json');
+
+	for(i in baseModels) {
+		const baseModel = baseModels[i];
+		const pathFile = await path.join(__dirname, `../../../../models/${baseModel.name}.json`);
+
+		await fs.access(pathFile, fs.F_OK, (err) => {
+		  	if (err) {
+		  		return eval(delete baseModel);
+		  	};
+		});
+	};
+};
 
 async function checkDir(argument) {
-	fs.stat(models_dir.main, function(err) {
+	await fs.stat(models_dir.main, async function(err) {
     	if (err && err.code === 'ENOENT') {
-        	fs.mkdir(models_dir.main, err => {
+        	await fs.mkdir(models_dir.main, err => {
         	});
     	};
 	});
 };
 
 async function checkModels(models) {
-	fs.access(models_dir.info, fs.F_OK, (err) => {
+	await fs.access(models_dir.info, fs.F_OK, (err) => {
 		  if (err) {
 		    return fs.writeFile(models_dir.info, "{}", "utf-8", function(err, result) {});
 		  };
@@ -22,12 +50,14 @@ async function checkModels(models) {
 
 	for(i in models) {
 		var name = models[i];
-		console.log(name);
-		var pathFile = path.join(__dirname, `../../../../models/${name}.json`);
+		const pathFile = await path.join(__dirname, `../../../../models/${name}.json`);
+
+		if(!models[name]) await addModel(name);
 
 		await fs.access(pathFile, fs.F_OK, (err) => {
 		  if (err) {
-		    return fs.writeFile(pathFile, "{}", "utf-8", function(err, result) {});
+		  	// console.log(err);
+		    return fs.writeFile(pathFile, "{}", function(err, result) {});
 		  };
 		});
 	};
@@ -43,9 +73,12 @@ module.exports = async function connect(argument) {
 
 	// check models
 	await checkModels(models);
+	await checkBaseModels();
 
 	// screen models list
 	setTimeout(async () => {
 		await models_list();
 	}, 1000);
+
+	await saveDB(saveTime);
 };
