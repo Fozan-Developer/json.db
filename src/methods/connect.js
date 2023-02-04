@@ -5,11 +5,12 @@ const path = require('path');
 var models_dir = require('../functions/models_dir.js')();
 var saveDB = require('../events/saveDB.js');
 
+// создание записи в models библиотеки
 async function addModel(name) {
 	let baseModels = require('../models.json');
 
 	baseModels[name] = {
-		name: name,
+		name: String(name),
 		file: `${name}.json`
 	};
 
@@ -17,6 +18,7 @@ async function addModel(name) {
 	require('fs').writeFileSync(pathFile, JSON.stringify(baseModels, null, '\t'));
 };
 
+// проверка введённых баз
 async function checkBaseModels(models) {
 	let baseModels = require('../models.json');
 	const baseModelsFile = await path.join(__dirname, `../models.json`);
@@ -27,10 +29,10 @@ async function checkBaseModels(models) {
 		if(!findModel) { eval(delete baseModels[i] )};
 	};
 
-	console.log(baseModels);
 	return require('fs').writeFileSync(baseModelsFile, JSON.stringify(baseModels, null, '\t'));
 };
 
+// проверка директории
 async function checkDir(argument) {
 	await fs.stat(models_dir.main, async function(err) {
     	if (err && err.code === 'ENOENT') {
@@ -40,6 +42,7 @@ async function checkDir(argument) {
 	});
 };
 
+// проверка наличие модели
 async function checkModels(models) {
 	await fs.access(models_dir.info, fs.F_OK, (err) => {
 		  if (err) {
@@ -49,13 +52,13 @@ async function checkModels(models) {
 
 	for(i in models) {
 		var name = models[i];
+		if(typeof name != "string") return;
 		const pathFile = await path.join(__dirname, `../../../../models/${name}.json`);
 
 		if(!models[name]) await addModel(name);
 
 		await fs.access(pathFile, fs.F_OK, (err) => {
 		  if (err) {
-		  	// console.log(err);
 		    return fs.writeFile(pathFile, "{}", function(err, result) {});
 		  };
 		});
@@ -64,8 +67,6 @@ async function checkModels(models) {
 
 module.exports = async function connect(argument) {
 	const { saveTime, models } = argument;
-
-	// var attachment = fs.readFileSync(filePath);
 
 	// check directory models
 	await checkDir(models);
@@ -77,7 +78,7 @@ module.exports = async function connect(argument) {
 	// screen models list
 	setTimeout(async () => {
 		await models_list();
-	}, 10000);
+	}, 1000);
 
 	await saveDB(saveTime);
 };

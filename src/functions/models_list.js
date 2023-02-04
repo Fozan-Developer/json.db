@@ -24,19 +24,8 @@ async function sort_models() {
 		var name = model.name;
 
 		const pathFile = await path.join(__dirname, `../../../../models/${model.file}`);
-		await fs.access(pathFile, fs.constants.R_OK, (err) => {
-			if(err) {
-				eval(delete model);
-				return require('fs').writeFileSync(models, JSON.stringify(models, null, '\t'));
-			};
-		  	if (!err) {
-		  		const file = require(`../../../../models/${model.file}`)
-		  		let objectsCount = 0;
-		  		for(i in file) { objectsCount += 1 };
 
-		 		res[i] = new Bases(name, objectsCount);
-		  	};
-		});
+		res[i] = new Bases(name, 1);
    	};
 
 	return res;
