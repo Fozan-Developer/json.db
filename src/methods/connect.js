@@ -53,7 +53,7 @@ async function checkModels(models) {
 	for(i in models) {
 		var name = models[i];
 		if(typeof name != "string") return;
-		const pathFile = await path.join(__dirname, `../../../../models/${name}.json`);
+		const pathFile = await path.join(__dirname, `../../../../../models/${name}.json`);
 
 		if(!models[name]) await addModel(name);
 

@@ -23,7 +23,7 @@ async function sort_models() {
 		var model = models[id];
 		var name = model.name;
 
-		const pathFile = await path.join(__dirname, `../../../../models/${model.file}`);
+		const pathFile = await path.join(__dirname, `../../../../../models/${model.file}`);
 
 		res[i] = new Bases(name, 1);
    	};
