@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 var models_dir = require('../functions/models_dir.js')();
-var saveDB = require('../functions/saveDB.js');
+var saveDB = require('../events/saveDB.js');
 
 async function addModel(name) {
 	let baseModels = require('../models.json');
@@ -17,19 +17,18 @@ async function addModel(name) {
 	require('fs').writeFileSync(pathFile, JSON.stringify(baseModels, null, '\t'));
 };
 
-async function checkBaseModels(argument) {
+async function checkBaseModels(models) {
 	let baseModels = require('../models.json');
+	const baseModelsFile = await path.join(__dirname, `../models.json`);
 
 	for(i in baseModels) {
-		const baseModel = baseModels[i];
-		const pathFile = await path.join(__dirname, `../../../../models/${baseModel.name}.json`);
-
-		await fs.access(pathFile, fs.F_OK, (err) => {
-		  	if (err) {
-		  		return eval(delete baseModel);
-		  	};
-		});
+		const name = baseModels[i].name;
+		let findModel = models.find(x=> name == x);
+		if(!findModel) { eval(delete baseModels[i] )};
 	};
+
+	console.log(baseModels);
+	return require('fs').writeFileSync(baseModelsFile, JSON.stringify(baseModels, null, '\t'));
 };
 
 async function checkDir(argument) {
@@ -72,13 +71,13 @@ module.exports = async function connect(argument) {
 	await checkDir(models);
 
 	// check models
+	await checkBaseModels(models);
 	await checkModels(models);
-	await checkBaseModels();
 
 	// screen models list
 	setTimeout(async () => {
 		await models_list();
-	}, 1000);
+	}, 10000);
 
 	await saveDB(saveTime);
 };

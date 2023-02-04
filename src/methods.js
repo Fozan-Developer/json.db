@@ -1,5 +1,5 @@
-const connect = require('./methods/connect.js');
+// const connect = require('./methods/connect.js');
 
 module.exports = {
-	connect
+	// connect
 };

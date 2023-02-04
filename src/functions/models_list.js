@@ -9,7 +9,7 @@ function Bases(name, objects) {
 };
 
 async function sort_models() {
-	const models = require('../models.json');
+	let models = require('../models.json');
 
 	let res = {};
 
@@ -20,19 +20,23 @@ async function sort_models() {
 	let i = 0; 
 	for (id in models) {
 		i++;
-		var name = models[id].name;
+		var model = models[id];
+		var name = model.name;
 
-		const pathFile = await path.join(__dirname, `../../../../models/${name}.json`);
-		await fs.access(pathFile, fs.F_OK, (err) => {
+		const pathFile = await path.join(__dirname, `../../../../models/${model.file}`);
+		await fs.access(pathFile, fs.constants.R_OK, (err) => {
+			if(err) {
+				eval(delete model);
+				return require('fs').writeFileSync(models, JSON.stringify(models, null, '\t'));
+			};
 		  	if (!err) {
-		  		const file = require(`../../../../models/${name}.json`);
+		  		const file = require(`../../../../models/${model.file}`)
 		  		let objectsCount = 0;
 		  		for(i in file) { objectsCount += 1 };
 
 		 		res[i] = new Bases(name, objectsCount);
 		  	};
 		});
-
    	};
 
 	return res;

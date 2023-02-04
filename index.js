@@ -3,5 +3,9 @@
 **/
 
 const methods = require('./src/methods.js');
+const connect = require('./src/methods/connect.js');
 
-module.exports = methods;
+module.exports = {
+	connect,
+	methods
+};
