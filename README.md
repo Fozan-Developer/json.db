@@ -12,6 +12,7 @@
 </div>
 
 ## 📦 Install
+
 ---
 **NPM**
 ```sh
@@ -24,6 +25,7 @@ $ yarn add @mr_fozan/json.db
 ```
 
 ## 🚀 Usage
+
 ---
 ```js
 const db = require('@mr_fozan/json.db');
@@ -34,6 +36,14 @@ const connect = db.connect({ saveTime: 1000, models: [ "users" ] });
 ## 📖  Documentation
 ---
 **You can find a complete guide on our [website](https://fozan.gitbook.io/json.db/)**
+
+## 👥 Contributors
+---
+<p align="center">
+  <a href="https://github.com/Fozan-Developer/json.db/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=Fozan-Developer/json.db" />
+  </a>
+</p>
 
 ## License
 ---
