@@ -2,10 +2,12 @@
 	Json.DB by Mr_Fozan
 **/
 
-const methods = require('./src/methods.js');
-const connect = require('./src/methods/connect.js');
+const methods = require('./lib/methods.js');
+const utils = require('./lib/utils.js');
+const connect = require('./lib/methods/connect.js');
 
 module.exports = {
 	connect,
-	methods
+	methods,
+	utils
 };
