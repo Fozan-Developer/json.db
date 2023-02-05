@@ -2,5 +2,17 @@
 	"users": {
 		"name": "users",
 		"file": "users.json"
+	},
+	"admins": {
+		"name": "admins",
+		"file": "admins.json"
+	},
+	"games": {
+		"name": "games",
+		"file": "games.json"
+	},
+	"timers": {
+		"name": "timers",
+		"file": "timers.json"
 	}
 }
