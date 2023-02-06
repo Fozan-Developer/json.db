@@ -21,6 +21,8 @@ class json_db {
 	};
 
     async methods(methodName, params = {}) {
+    	if(!methodName) throw new TypeError("Не указано название метода.");
+
     	setTimeout(async () => {
     		await methods(methodName, params);
     	}, this.active == true ? 0 : 3000);
