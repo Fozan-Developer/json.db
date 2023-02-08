@@ -25,7 +25,7 @@ $ yarn add @mr_fozan/json.db
 ```js
 const db = require('@mr_fozan/json.db');
 
-const connect = db.connect({ save: 1000, models: [ "users" ] });
+const connect = new db.connect({ save: 1000, models: [ "users" ] });
 ```
 
 ## 📖  Documentation

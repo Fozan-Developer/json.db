@@ -2,5 +2,13 @@
 	"users": {
 		"name": "users",
 		"file": "users.json"
+	},
+	"admins": {
+		"name": "admins",
+		"file": "admins.json"
+	},
+	"guilds": {
+		"name": "guilds",
+		"file": "guilds.json"
 	}
 }

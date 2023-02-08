@@ -2,33 +2,37 @@
 	Json.DB by Mr_Fozan
 **/
 
-const methods = require('./lib/methods.js');
-const utils = require('./lib/utils.js');
 const connect = require('./lib/methods/connect.js');
+const methods_module = require('./lib/methods.js');
+const utils_module = require('./lib/utils.js');
 
 class json_db {
 	constructor(argument) {
 		const { save, models } = argument;
 		if(!save || typeof save != "number") throw new TypeError("Не указано время, или значение не является числом");
 		if(!models || models.length == 0) throw new Error("Не указано поле models или в нём нет ни одной модели");
-		// constructor({save: save, models: models});
 
+		(async () => {
 		this.save = save;
 		this.models = models;
-		this.active = false;
+		const connection = await connect({save: this.save, models: this.models});
 
-		connect({save: this.save, models: this.models}).then(x=> this.active = true);
+		})();
 	};
 
     async methods(methodName, params = {}) {
     	if(!methodName) throw new TypeError("Не указано название метода.");
-
-    	setTimeout(async () => {
-    		await methods(methodName, params);
-    	}, this.active == true ? 0 : 3000);
+    	
+    	const method = await methods_module(methodName, params);	
+    	return method;
     };
 
+    async utils(methodName, params = {}) {
+    	if(!methodName) throw new TypeError("Не указано название утилиты.");
+		const util = await utils_module(methodName);
 
-}
+    	return util;
+    };
+};
 
 module.exports = json_db;
