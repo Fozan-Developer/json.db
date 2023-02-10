@@ -8,14 +8,15 @@ const utils_module = require('./lib/utils.js');
 
 class json_db {
 	constructor(argument) {
-		const { save, models } = argument;
+		const { save, models, backup } = argument;
 		if(!save || typeof save != "number") throw new TypeError("Не указано время, или значение не является числом");
 		if(!models || models.length == 0) throw new Error("Не указано поле models или в нём нет ни одной модели");
 
 		(async () => {
 		this.save = save;
 		this.models = models;
-		const connection = await connect({save: this.save, models: this.models});
+		this.backup = backup;
+		const connection = await connect({save: this.save, models: this.models, backup: this.backup});
 
 		})();
 	};

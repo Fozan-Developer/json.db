@@ -6,9 +6,5 @@
 	"admins": {
 		"name": "admins",
 		"file": "admins.json"
-	},
-	"guilds": {
-		"name": "guilds",
-		"file": "guilds.json"
 	}
 }
