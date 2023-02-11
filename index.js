@@ -2,7 +2,7 @@
 	Json.DB by Mr_Fozan
 **/
 
-const checkMainFile = require('./lib/functions/checkMainFile.js');
+const checkMainFile = require('./lib/functions/checkMainFile.js')();
 const connect = require('./lib/methods/connect.js');
 const methods_module = require('./lib/methods.js');
 const utils_module = require('./lib/utils.js');
@@ -19,10 +19,8 @@ class json_db {
 		this.models = models;
 		this.backup = backup;
 
-		const check_main_file = await checkMainFile().then(async x=> {
-			if(x == true) await connect({save: this.save, models: this.models, backup: this.backup});
-		});
-
+		const connection = await connect({save: this.save, models: this.models, backup: this.backup});
+		return true;
 		})();
 	};
 
