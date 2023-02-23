@@ -1,6 +1,6 @@
 {
   "name": "@mr_fozan/json.db",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Json Data Base",
   "main": "index.js",
   "scripts": {
