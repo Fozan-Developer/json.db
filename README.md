@@ -23,9 +23,9 @@ $ yarn add @mr_fozan/json.db
 ## 🚀 Usage
 
 ```js
-const db = require('@mr_fozan/json.db');
+const json_db = require('@mr_fozan/json.db');
 
-const connect = new db.connect({ save: 1000, models: [ "users" ] });
+const db = new json_db ({ save: 1000, models: [ "users" ] });
 ```
 
 ## 📖  Documentation
