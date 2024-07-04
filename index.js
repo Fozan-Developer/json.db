@@ -1,42 +1,63 @@
-/**
-	Json.DB by Mr_Fozan
-**/
+const connect = require('./lib/methods/connect');
+const methods = require('./lib/methods');
+const utils = require('./lib/utils');
+const errors = require('./lib/events/errors');
 
-const checkMainFile = require('./lib/functions/checkMainFile.js')();
-const connect = require('./lib/methods/connect.js');
-const methods_module = require('./lib/methods.js');
-const utils_module = require('./lib/utils.js');
-const errors = require('./lib/events/errors.js');
+class JsonDB {
+    constructor({ save, models, backup }) {
+        if (!save || typeof save !== "number") {
+            throw new Error("Invalid save parameter");
+        }
+        if (!models || models.length === 0) {
+            throw new Error("Invalid models parameter");
+        }
 
-class json_db {
-	constructor(argument) {
-		const { save, models, backup } = argument;
-		if(!save || typeof save != "number") return errors("1.3");
-		if(!models || models.length == 0) return errors("1.4");
+        this.saveInterval = save;
+        this.models = models;
+        this.backupEnabled = backup;
 
-		(async () => {
-		this.save = save;
-		this.models = models;
-		this.backup = backup;
+        this.connected = false;
+        this.initialize();
+    }
 
-		const connection = await connect({save: this.save, models: this.models, backup: this.backup});
-		return true;
-		})();
-	};
+    async initialize() {
+        try {
+            await connect(this.saveInterval, this.models, this.backupEnabled);
+            this.connected = true;
+            console.log("JsonDB connected successfully");
+        } catch (error) {
+            console.error("Failed to connect JsonDB:", error);
+            throw new Error("JsonDB connection error");
+        }
+    }
 
-    async methods(methodName, params = {}) {
-    	if(!methodName) return errors("1.5");
+    async callMethod(methodName, params = {}) {
+        if (!methodName) {
+            throw new Error("Missing method name");
+        }
 
-    	const method = await methods_module(methodName, params);
-    	return method;
-    };
+        try {
+            const result = await methods.execute(methodName, params);
+            return result;
+        } catch (error) {
+            console.error(`Error executing method '${methodName}':`, error);
+            throw new Error(`Method '${methodName}' execution error`);
+        }
+    }
 
-    async utils(methodName, params = {}) {
-    	if(!methodName) return errors("1.6");
-		const util = await utils_module(methodName);
+    callUtility(utilityName, params = {}) {
+        if (!utilityName) {
+            throw new Error("Missing utility name");
+        }
 
-    	return util;
-    };
-};
+        try {
+            const result = utils.execute(utilityName, params);
+            return result;
+        } catch (error) {
+            console.error(`Error executing utility '${utilityName}':`, error);
+            throw new Error(`Utility '${utilityName}' execution error`);
+        }
+    }
+}
 
-module.exports = json_db;
+module.exports = JsonDB;

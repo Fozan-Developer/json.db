@@ -4,7 +4,7 @@
   "description": "Json Data Base",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "dev": "nodemon test.js"
   },
   "repository": {
     "type": "git",
